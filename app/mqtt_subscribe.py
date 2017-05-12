@@ -1,8 +1,9 @@
 import paho.mqtt.client as mqtt
 import time
 
-hostname = "iot.eclipse.org" # Sandbox broker
-port = 1883 # Default port for unencrypted MQTT
+# TODO: import from app config
+hostname = "iot.eclipse.org"
+port = 1883
 
 topic = "autostat/satellite"
 
@@ -10,7 +11,6 @@ def on_connect(client, userdata, rc):
   # Successful connection is '0'
   print("Connection result: " + str(rc))
   if rc == 0:
-    # Subscribe to topics
     client.subscribe(topic)
 
 def on_message(client, userdata, message):
@@ -21,16 +21,11 @@ def on_disconnect(client, userdata, rc):
   if rc != 0:
     print("Disconnected unexpectedly")
 
-# Initialize client instance
 client = mqtt.Client()
 
-# Bind events to functions
 client.on_connect = on_connect
 client.on_message = on_message
 client.on_disconnect = on_disconnect
 
-# Connect to the specified broker
 client.connect(hostname, port=port)
-
-# Network loop runs in the background to listen to the events
 client.loop_forever()

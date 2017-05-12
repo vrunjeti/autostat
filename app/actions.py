@@ -8,17 +8,12 @@ def create_action(type, payload):
 # actions defined in app
 #
 # USER_ADJUST_UP
-# payload = {
-#   "id": id
-# }
+# - id
 #
 # USER_ADJUST_DOWN
-# payload = {
-#   "id": id
-# }
+# - id
 #
 # TEMP_UPDATE
-# payload = {
-#   "id": id,
-#   "temperature": get_temperature()
-# }
+# - id
+# - temperature
+

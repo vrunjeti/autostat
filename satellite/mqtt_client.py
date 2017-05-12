@@ -4,11 +4,12 @@ import time
 from sense import temp_update
 from config import id
 
+# TODO: import from app config
 interval = 5
 topic = 'autostat/satellite'
 
-hostname = "iot.eclipse.org" # Sandbox broker
-port = 1883 # Default port for unencrypted MQTT
+hostname = "iot.eclipse.org"
+port = 1883
 
 mqttc = mqtt.Client()
 mqttc.connect(hostname, port=port)
