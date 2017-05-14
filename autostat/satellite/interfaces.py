@@ -5,7 +5,7 @@ def process_action(action):
   if action['payload']['status']:
     open_vent()
     sense.set_led_green()
-  else
+  else:
     close_vent()
     sense.set_led_red()
 

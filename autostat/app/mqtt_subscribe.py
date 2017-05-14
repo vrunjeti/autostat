@@ -18,7 +18,7 @@ def on_connect(client, userdata, rc):
     client.subscribe(topic)
 
 def on_message(client, userdata, message):
-  print('Received message on %s: %s (QoS = %s)' % (message.topic, message.payload.decode('utf-8'), str(message.qos)))
+  # print('Received message on %s: %s (QoS = %s)' % (message.topic, message.payload.decode('utf-8'), str(message.qos)))
   # print 'temp is ' + str(eval(message.payload.decode('utf-8'))['payload']['temperature'])
   action = eval(message.payload.decode('utf-8'))
   dispatch(action)

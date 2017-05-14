@@ -2,6 +2,7 @@ import config
 import time
 import sense
 from mqtt_publish import message_system
+# from sense import temp_update
 
 # minutes that the update of the system occurs
 # TODO: line up with config.py
@@ -21,10 +22,10 @@ payload = {
   'temperature': sense.get_temperature()
 }
 register_satellite_action = create_action('REGISTER_SATELLITE', payload)
-message_system(action)
+message_system(register_satellite_action)
 
 # keep app running
 while True:
-  temp_action = temp_update(config.id)
+  temp_action = sense.temp_update(config.id)
   message_system(temp_action)
   time.sleep(INTERVAL)

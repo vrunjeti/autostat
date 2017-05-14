@@ -9,8 +9,8 @@ import threading
 
 MODULE_NAME = 'weather'
 
-# INTERVAL = 30 * 60
-INTERVAL = 10
+INTERVAL = 10 * 60
+# INTERVAL = 10
 
 # TODO: import
 def create_action(type, payload):

@@ -18,7 +18,7 @@ def on_connect(client, userdata, rc):
 def on_message(client, userdata, message):
   print('Received message on %s: %s (QoS = %s)' % (message.topic, message.payload.decode('utf-8'), str(message.qos)))
   action = eval(message.payload.decode('utf-8'))
-  if action['id'] == id:
+  if action['payload']['id'] == id:
     process_action(action)
 
 def on_disconnect(client, userdata, rc):
