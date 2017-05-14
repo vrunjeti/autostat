@@ -6,8 +6,8 @@ sense = SenseHat()
 # TODO: figure out import
 def create_action(type, payload):
   action = {
-    "type": type,
-    "payload": payload
+    'type': type,
+    'payload': payload
   }
   return action
 
@@ -17,8 +17,8 @@ def get_temperature():
 
 def temp_update(id):
   payload = {
-    "id": id,
-    "temperature": get_temperature()
+    'id': id,
+    'temperature': get_temperature()
   }
-  action = create_action("TEMP_UPDATE", payload)
+  action = create_action('TEMP_UPDATE', payload)
   return action

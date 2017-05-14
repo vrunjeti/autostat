@@ -1,12 +1,13 @@
 import paho.mqtt.client as mqtt
 import time
-from app.dispatcher import dispatch
+from config import id
+from interfaces import process_action
 
 # TODO: import from app config
 hostname = 'iot.eclipse.org'
 port = 1883
 
-topic = 'autostat/from_satellite'
+topic = 'autostat/to_satellite'
 
 def on_connect(client, userdata, rc):
   # Successful connection is '0'
@@ -16,9 +17,9 @@ def on_connect(client, userdata, rc):
 
 def on_message(client, userdata, message):
   print('Received message on %s: %s (QoS = %s)' % (message.topic, message.payload.decode('utf-8'), str(message.qos)))
-  # print 'temp is ' + str(eval(message.payload.decode('utf-8'))['payload']['temperature'])
   action = eval(message.payload.decode('utf-8'))
-  dispatch(action)
+  if action['id'] == id:
+    process_action(action)
 
 def on_disconnect(client, userdata, rc):
   if rc != 0:
