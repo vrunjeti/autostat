@@ -1,6 +1,8 @@
 # purpose of dispatcher is to take actions and update the application state
 # the controller will then take the state and decide what to do with the updated state
 
+import json
+import app_config
 from app.state import APP_STATE as state
 import app.controller as controller
 from modules.weather import weather_action_dispatch as weather_update, add_weather_module_dispatch as add_weather_module
@@ -13,6 +15,12 @@ TOLERANCE = 1
 def dispatch(action):
   type = action['type']
   payload = action['payload']
+
+  if app_config.DEBUG:
+    print('--- DISPATCH ---')
+    print(json.dumps(action, indent=2, sort_keys=True))
+    print('----------------')
+
   action_mapper[type](payload)
   controller.trigger_update()
 

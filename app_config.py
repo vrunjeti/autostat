@@ -12,3 +12,5 @@ LOCATION = {
   'lat': 22.278594,
   'lon': 114.128931
 }
+
+DEBUG = True

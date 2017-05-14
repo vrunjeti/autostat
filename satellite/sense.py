@@ -22,3 +22,11 @@ def temp_update(id):
   }
   action = create_action('TEMP_UPDATE', payload)
   return action
+
+def set_led_green():
+  green = (0, 255, 0)
+  sense.clear(green)
+
+def set_led_red():
+  red = (255, 0, 0)
+  sense.clear(red)
