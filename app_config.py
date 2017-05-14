@@ -7,3 +7,8 @@ TOLERANCE = 1
 
 # seconds that the update of the system occurs
 INTERVAL = 30 * 60
+
+LOCATION = {
+  'lat': 22.278594,
+  'lon': 114.128931
+}

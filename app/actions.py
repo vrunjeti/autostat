@@ -27,4 +27,8 @@ def create_action(type, payload):
 # - id
 # - status
 #
+# ---- FROM WEATHER MODULE TO APP ----
+# WEATHER_UPDATE
+# - temperature
+#
 

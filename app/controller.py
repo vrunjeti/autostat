@@ -20,6 +20,10 @@ def trigger_update():
   update_satellites_status()
   update_system_status()
 
+# update virtual temp of all satellites
+def broadcast_update_satellites():
+  pass
+
 def update_satellites_status():
   for satellite in state['satellites']:
     temp_diff = satellite['virtual_temperature'] - satellite['set_temperature']

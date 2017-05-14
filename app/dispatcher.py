@@ -3,6 +3,7 @@
 
 from app.state import APP_STATE as state
 import app.controller as controller
+from modules.weather import weather_action_dispatch as weather_update, add_weather_module_dispatch as add_weather_module
 
 # the threshold for the difference in the set temp
 # and the current temp needed to change the status
@@ -71,5 +72,8 @@ action_mapper = {
   'REGISTER_SATELLITE': register_satellite
   'USER_ADJUST_UP': user_adjust_up
   'USER_ADJUST_DOWN': user_adjust_down
-  'TEMP_UPDATE': temp_update
+  'TEMP_UPDATE': temp_update,
+  # modules
+  'ADD_WEATHER_MODULE': lambda payload: add_weather_module(payload, state),
+  'WEATHER_UPDATE': lambda payload: weather_update(payload, state)
 }

@@ -89,3 +89,5 @@ ENV/
 .ropeproject
 
 .DS_Store
+
+modules/weather_module_config.py
