@@ -1,5 +1,5 @@
 import time
-import app.controller as controller
+# import app.controller as controller
 
 # minutes that the update of the system occurs
 # TODO: line up with config.py

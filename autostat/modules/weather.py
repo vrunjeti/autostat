@@ -1,12 +1,16 @@
 import requests
 import time
-import app_config
-from app.dispatcher import dispatch
-from modules.weather_module_config import API_KEY, API_URL
+import autostat.app_config as app_config
+from mqtt_publish import message_app
+from weather_module_config import API_KEY, API_URL
+import threading
+
+# print meep
 
 MODULE_NAME = 'weather'
 
-INTERVAL = 30 * 60
+# INTERVAL = 30 * 60
+INTERVAL = 10
 
 # TODO: import
 def create_action(type, payload):
@@ -40,7 +44,7 @@ def create_weather_action(lat, lon):
   return weather_action
 
 def send_action(action):
-  dispatch(action)
+  message_app(action)
 
 def add_weather_module():
   payload = {
@@ -49,7 +53,7 @@ def add_weather_module():
   add_module_action = create_action('ADD_WEATHER_MODULE', payload)
   send_action(add_module_action)
 
-  weather_action = create_weather_action(config.LOCATION['lat'], config.LOCATION['lon'])
+  weather_action = create_weather_action(app_config.LOCATION['lat'], app_config.LOCATION['lon'])
   send_action(weather_action)
 
 def add_weather_module_dispatch(payload, app_state):
@@ -59,6 +63,8 @@ def add_weather_module_dispatch(payload, app_state):
 # TODO: describe how weather should affect virtual temp in main app
 def weather_action_dispatch(payload, app_state):
   # update app state
+  # print('----- weather_action_dispatch, app_state -----')
+  # print(app_state)
   weather_module_data = [m for m in app_state['module_data'] if m['type'] == MODULE_NAME][0]
   weather_module_data['temperature_data'] = payload
 
@@ -86,9 +92,15 @@ def weather_action_dispatch(payload, app_state):
 
 # run module
 print('running module: ' + MODULE_NAME)
-add_weather_module()
+# HACK!
+t1 = threading.Timer(INTERVAL/4, add_weather_module)
+t1.start()
 
-while True:
+def update_weather():
+  t = threading.Timer(INTERVAL, update_weather)
+  t.start()
   weather_action = create_weather_action(app_config.LOCATION['lat'], app_config.LOCATION['lon'])
   send_action(weather_action)
-  time.sleep(INTERVAL)
+
+t = threading.Timer(INTERVAL, update_weather)
+t.start()

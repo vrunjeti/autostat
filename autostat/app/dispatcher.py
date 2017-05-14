@@ -2,15 +2,17 @@
 # the controller will then take the state and decide what to do with the updated state
 
 import json
-import app_config
-from app.state import APP_STATE as state
-import app.controller as controller
-from modules.weather import weather_action_dispatch as weather_update, add_weather_module_dispatch as add_weather_module
+import autostat.app_config as app_config
+from state import APP_STATE as state
+import controller as controller
+from autostat.modules.weather import weather_action_dispatch as weather_update, add_weather_module_dispatch as add_weather_module
 
 # the threshold for the difference in the set temp
 # and the current temp needed to change the status
 # TODO: line up with config.py
 TOLERANCE = 1
+
+print('app_config.DEBUG: ' + str(app_config.DEBUG))
 
 def dispatch(action):
   type = action['type']
@@ -77,9 +79,9 @@ def temp_update(payload):
   satellite['virtual_temperature'] += temp_diff
 
 action_mapper = {
-  'REGISTER_SATELLITE': register_satellite
-  'USER_ADJUST_UP': user_adjust_up
-  'USER_ADJUST_DOWN': user_adjust_down
+  'REGISTER_SATELLITE': register_satellite,
+  'USER_ADJUST_UP': user_adjust_up,
+  'USER_ADJUST_DOWN': user_adjust_down,
   'TEMP_UPDATE': temp_update,
   # modules
   'ADD_WEATHER_MODULE': lambda payload: add_weather_module(payload, state),
