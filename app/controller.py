@@ -15,21 +15,10 @@ def create_action(type, payload):
   }
   return action
 
-def add_satellite(id):
-  satellite = {
-    'id': id,
-    # initialize satellite set temp to system temp
-    'set_temperature': state['set_temperature'],
-    # initialize satellite curr temp to system temp,
-    # update after connecting
-    # TODO: or include as param?
-    'current_temperature': state['set_temperature'],
-    'status': False,
-    'virtual_temperature': state['set_temperature']
-  }
-  state['satellites'].append(satellite)
-  # TODO: call update_satellites_status() here or in app code?
+
+def trigger_update():
   update_satellites_status()
+  update_system_status()
 
 def update_satellites_status():
   for satellite in state['satellites']:

@@ -2,6 +2,7 @@
 # the controller will then take the state and decide what to do with the updated state
 
 from app.state import APP_STATE as state
+import app.controller as controller
 
 # the threshold for the difference in the set temp
 # and the current temp needed to change the status
@@ -12,6 +13,7 @@ def dispatch(action):
   type = action['type']
   payload = action['payload']
   action_mapper[type](payload)
+  controller.trigger_update()
 
 def set_system_temperature(temp):
   state['set_temperature'] = temp
@@ -20,6 +22,23 @@ def set_system_temperature(temp):
   for s in state['satellites']:
     s['set_temperature'] = temp
     s['virtual_temperature'] = temp
+
+def register_satellite(payload):
+  id = payload['id']
+  temperature = payload['temperature']
+
+  if any([s for s in state['satellites'] if s['id'] == id]):
+    temp_update(payload)
+    return
+
+  new_satellite = {
+    'id': id,
+    'set_temperature': state['set_temperature'],
+    'current_temperature': temperature,
+    'status': False,
+    'virtual_temperature': state['set_temperature']
+  }
+  state['satellites'].append(new_satellite)
 
 def user_adjust_up(payload):
   id = payload['id']
@@ -49,6 +68,7 @@ def temp_update(payload):
   satellite['virtual_temperature'] += temp_diff
 
 action_mapper = {
+  'REGISTER_SATELLITE': register_satellite
   'USER_ADJUST_UP': user_adjust_up
   'USER_ADJUST_DOWN': user_adjust_down
   'TEMP_UPDATE': temp_update

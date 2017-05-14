@@ -7,8 +7,9 @@ INTERVAL = 30 * 60
 
 # TODO: set up app
 
-# keep app running
-while True:
-  controller.update_satellites_status()
-  controller.update_system_status()
-  sleep(INTERVAL)
+
+# # keep app running
+# while True:
+#   controller.update_satellites_status()
+#   controller.update_system_status()
+#   time.sleep(INTERVAL)

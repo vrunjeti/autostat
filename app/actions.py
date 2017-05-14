@@ -8,6 +8,10 @@ def create_action(type, payload):
 # actions defined in app
 #
 # ---- FROM SATELLITE TO APP ----
+# REGISTER_SATELLITE
+# - id
+# - temperature
+#
 # USER_ADJUST_UP
 # - id
 #
