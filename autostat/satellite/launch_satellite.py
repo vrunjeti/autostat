@@ -6,7 +6,7 @@ from mqtt_publish import message_system
 
 # minutes that the update of the system occurs
 # TODO: line up with config.py
-INTERVAL = 30 * 60
+INTERVAL = 1 * 60
 
 # TODO: import
 def create_action(type, payload):

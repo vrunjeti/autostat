@@ -9,7 +9,7 @@ import threading
 
 MODULE_NAME = 'weather'
 
-INTERVAL = 10 * 60
+INTERVAL = 2 * 60
 # INTERVAL = 10
 
 # TODO: import
@@ -76,19 +76,24 @@ def weather_action_dispatch(payload, app_state):
     # if set to AC and it's colder outside, reduce virtual temp so AC runs less
     if app_state['type'] == 'AC' and current_temp < virtual_temp:
       delta = virtual_temp - current_temp
-      magnitude = (delta + (delta ** 2)) / 4
+      magnitude = scale_virtual_temp(delta)
       satellite['virtual_temperature'] -= magnitude
 
     # if set to HEAT and it's warmer outside, increase virtual temp so HEAT runs less
     if app_state['type'] == 'HEAT' and current_temp > virtual_temp:
       delta = current_temp - virtual_temp
-      magnitude = (delta + (delta ** 2)) / 4
+      magnitude = scale_virtual_temp(delta)
       satellite['virtual_temperature'] += magnitude
 
   # TODO: do something with min and max temp of the day
   #       maybe this isn't enough - might need hourly weather forecast
   temp_min = payload['temp_min']
   temp_max = payload['temp_max']
+
+# the formula to determine the effect of the
+# current temperature with the virtual temperature setting
+def scale_virtual_temp(delta):
+  return (delta + (delta ** 2)) / 200
 
 # run module
 print('running module: ' + MODULE_NAME)

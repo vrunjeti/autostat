@@ -17,13 +17,15 @@ print('app_config.DEBUG: ' + str(app_config.DEBUG))
 def dispatch(action):
   type = action['type']
   payload = action['payload']
+  action_mapper[type](payload)
 
   if app_config.DEBUG:
-    print('--- DISPATCH ---')
+    print('--------- DISPATCH ---------')
     print(json.dumps(action, indent=2, sort_keys=True))
-    print('----------------')
+    print('---------- STATE -----------')
+    print(json.dumps(state, indent=2, sort_keys=True))
+    print('----------------------------')
 
-  action_mapper[type](payload)
   controller.trigger_update()
 
 def set_system_temperature(temp):
@@ -47,7 +49,7 @@ def register_satellite(payload):
     'set_temperature': state['set_temperature'],
     'current_temperature': temperature,
     'status': False,
-    'virtual_temperature': state['set_temperature']
+    'virtual_temperature': temperature
   }
   state['satellites'].append(new_satellite)
 
@@ -72,11 +74,14 @@ def temp_update(payload):
   satellite = [s for s in state['satellites'] if s['id'] == id][0]
   satellite['current_temperature'] = payload['temperature']
 
-  temp_diff = satellite['current_temperature'] - satellite['set_temperature']
+  temp_diff_v = satellite['current_temperature'] - satellite['virtual_temperature']
+  temp_diff_s = satellite['current_temperature'] - satellite['set_temperature']
   if state['type'] == 'HEAT':
     temp_diff = temp_diff * -1
 
-  satellite['virtual_temperature'] += temp_diff
+  # ratio of (current_temperature - virtual_temperature) : (current_temperature - set_temperature)
+  dt = temp_diff_v / temp_diff_s
+  satellite['virtual_temperature'] += dt
 
 action_mapper = {
   'REGISTER_SATELLITE': register_satellite,

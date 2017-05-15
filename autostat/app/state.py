@@ -2,13 +2,13 @@ APP_STATE = {
   'set_temperature': 23,
   'type': 'AC',                   # 'AC' or 'HEAT'
   'status': True,                 # True means turned on, False means turned off
-  'virtual_weight_multiplier': {
-    'user_adjust': 1.0,
-    'weather': 1.0,
-    'calendar': 1.0
-  },
   'satellites': [],
   'module_data': []
+  # 'virtual_weight_multiplier': {
+  #   'user_adjust': 1.0,
+  #   'weather': 1.0,
+  #   'calendar': 1.0
+  # },
 }
 
 # structure for satellite:
