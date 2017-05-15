@@ -11,7 +11,8 @@ port = 1883
 
 topic = [
   ('autostat/from_satellite', 1),
-  ('autostat/modules', 1)
+  ('autostat/modules', 1),
+  ('autostat/control_board', 1)
 ]
 
 def on_connect(client, userdata, rc):

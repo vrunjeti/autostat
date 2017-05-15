@@ -31,4 +31,9 @@ def create_action(type, payload):
 # WEATHER_UPDATE
 # - temperature
 #
+# # ---- SIMULATION ----
+# SET_ROOM_TEMP
+# - id
+# - temperature
+#
 

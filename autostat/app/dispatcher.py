@@ -83,6 +83,7 @@ def temp_update(payload):
   dt = temp_diff_v / temp_diff_s
   satellite['virtual_temperature'] += dt
 
+
 action_mapper = {
   'REGISTER_SATELLITE': register_satellite,
   'USER_ADJUST_UP': user_adjust_up,
@@ -90,5 +91,8 @@ action_mapper = {
   'TEMP_UPDATE': temp_update,
   # modules
   'ADD_WEATHER_MODULE': lambda payload: add_weather_module(payload, state),
-  'WEATHER_UPDATE': lambda payload: weather_update(payload, state)
+  'WEATHER_UPDATE': lambda payload: weather_update(payload, state),
+  # simulation
+  'SET_ROOM_TEMP': temp_update,
+  'SET_TEMP_WEATHER': lambda payload: weather_update(payload, state)
 }

@@ -75,15 +75,31 @@ def weather_action_dispatch(payload, app_state):
 
     # if set to AC and it's colder outside, reduce virtual temp so AC runs less
     if app_state['type'] == 'AC' and current_temp < virtual_temp:
-      delta = virtual_temp - current_temp
-      magnitude = scale_virtual_temp(delta)
+      dt = virtual_temp - current_temp
+      magnitude = scale_virtual_temp(dt)
       satellite['virtual_temperature'] -= magnitude
+
+    # if set to AC, it's hot outside, and AC is currently off,
+    # increase virtual temp so AC runs more
+    # this would typically happen when weather is hovering around room temp
+    if app_state['type'] == 'AC' and current_temp > virtual_temp and not app_state['status']:
+      dt = current_temp - virtual_temp
+      magnitude = scale_virtual_temp(dt)
+      satellite['virtual_temperature'] += magnitude
 
     # if set to HEAT and it's warmer outside, increase virtual temp so HEAT runs less
     if app_state['type'] == 'HEAT' and current_temp > virtual_temp:
-      delta = current_temp - virtual_temp
-      magnitude = scale_virtual_temp(delta)
+      dt = current_temp - virtual_temp
+      magnitude = scale_virtual_temp(dt)
       satellite['virtual_temperature'] += magnitude
+
+    # if set to HEAT, it's cold outside, and HEAT is currently off,
+    # decrease virtual temp so HEAT runs more
+    # this would typically happen when weather is hovering around room temp
+    if app_state['type'] == 'HEAT' and current_temp < virtual_temp and not app_state['status']:
+      dt = virtual_temp - current_temp
+      magnitude = scale_virtual_temp(dt)
+      satellite['virtual_temperature'] -= magnitude
 
   # TODO: do something with min and max temp of the day
   #       maybe this isn't enough - might need hourly weather forecast
@@ -92,13 +108,14 @@ def weather_action_dispatch(payload, app_state):
 
 # the formula to determine the effect of the
 # current temperature with the virtual temperature setting
-def scale_virtual_temp(delta):
-  return (delta + (delta ** 2)) / 200
+def scale_virtual_temp(dt):
+  return (dt + (dt ** 2)) / 200
 
 # run module
 print('running module: ' + MODULE_NAME)
 # HACK!
 t1 = threading.Timer(INTERVAL/4, add_weather_module)
+t1.daemon = True
 t1.start()
 
 def update_weather():
@@ -108,4 +125,5 @@ def update_weather():
   send_action(weather_action)
 
 t = threading.Timer(INTERVAL, update_weather)
+t.daemon = True
 t.start()
