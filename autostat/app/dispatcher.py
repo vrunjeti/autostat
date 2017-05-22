@@ -74,14 +74,48 @@ def temp_update(payload):
   satellite = [s for s in state['satellites'] if s['id'] == id][0]
   satellite['current_temperature'] = payload['temperature']
 
-  temp_diff_v = satellite['current_temperature'] - satellite['virtual_temperature']
-  temp_diff_s = satellite['current_temperature'] - satellite['set_temperature']
-  if state['type'] == 'HEAT':
-    temp_diff = temp_diff * -1
+  ct = satellite['current_temperature']
+  vt = satellite['virtual_temperature']
+  st = satellite['set_temperature']
+  ac = state['type'] == 'AC'
+  heat = state['type'] == 'HEAT'
 
-  # ratio of (current_temperature - virtual_temperature) : (current_temperature - set_temperature)
-  dt = temp_diff_v / temp_diff_s
-  satellite['virtual_temperature'] += dt
+  scale = 10
+
+  if ac:
+    if ct > vt > st:
+      # decrease rate of decreasing vt
+      if (ct - vt) > (vt - st):
+        dt = (ct - vt) - (vt - st)
+        satellite['virtual_temperature'] -= dt / scale
+      else:
+        dt = (vt - st) - (ct - vt)
+        satellite['virtual_temperature'] -= dt / scale
+    if vt > ct > st:
+      # increase rate of decreasing vt
+      dt = (vt - ct) + (ct - st)
+      satellite['virtual_temperature'] -= dt / scale
+    if ct > st > vt:
+      # (gets really hot): increase vt
+      dt = (ct - vt)
+      satellite['virtual_temperature'] += dt / scale
+  if heat:
+    if ct < vt < st:
+      # decrease rate of increasing vt
+      if (vt - ct) > (st - vt):
+        dt = (vt - ct) - (st - vt)
+        satellite['virtual_temperature'] += dt / scale
+      else:
+        dt = (st - vt) - (vt - ct)
+        satellite['virtual_temperature'] += dt / scale
+    if vt < ct < st:
+      # increase rate of increasing vt
+      dt = (ct - vt) + (st - ct)
+      satellite['virtual_temperature'] += dt / scale
+    if ct < st < vt:
+      # (gets really cold): decrease vt
+      dt = (vt - ct)
+      satellite['virtual_temperature'] -= dt / scale
 
 
 action_mapper = {
