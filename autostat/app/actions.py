@@ -36,4 +36,3 @@ def create_action(type, payload):
 # - id
 # - temperature
 #
-

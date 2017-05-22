@@ -7,13 +7,6 @@ from state import APP_STATE as state
 import controller as controller
 from autostat.modules.weather import weather_action_dispatch as weather_update, add_weather_module_dispatch as add_weather_module
 
-# the threshold for the difference in the set temp
-# and the current temp needed to change the status
-# TODO: line up with config.py
-TOLERANCE = 1
-
-print('app_config.DEBUG: ' + str(app_config.DEBUG))
-
 def dispatch(action):
   type = action['type']
   payload = action['payload']
@@ -59,7 +52,7 @@ def user_adjust_up(payload):
   # change by tolerance because automatic adjust with user adjusting implies
   # adjustments are more related to overall application state than speicific temperatures
   # (like a traditional thermostat)
-  satellite['virtual_temperature'] += TOLERANCE
+  satellite['virtual_temperature'] += app_config.TOLERANCE
 
 def user_adjust_down(payload):
   id = payload['id']
@@ -67,7 +60,7 @@ def user_adjust_down(payload):
   # change by tolerance because automatic adjust with user adjusting implies
   # adjustments are more related to overall application state than speicific temperatures
   # (like a traditional thermostat)
-  satellite['virtual_temperature'] -= TOLERANCE
+  satellite['virtual_temperature'] -= app_config.TOLERANCE
 
 def temp_update(payload):
   id = payload['id']

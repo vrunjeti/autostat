@@ -1,24 +1,11 @@
 import requests
-import time
 import autostat.app_config as app_config
+from app.actions import create_action
 from mqtt_publish import message_app
 from weather_module_config import API_KEY, API_URL
 import threading
 
-# print meep
-
 MODULE_NAME = 'weather'
-
-INTERVAL = 2 * 60
-# INTERVAL = 10
-
-# TODO: import
-def create_action(type, payload):
-  action = {
-    'type': type,
-    'payload': payload
-  }
-  return action
 
 def get_weather(lat, lon):
   params = {
@@ -60,11 +47,8 @@ def add_weather_module_dispatch(payload, app_state):
   if MODULE_NAME not in [m['type'] for m in app_state['module_data']]:
     app_state['module_data'].append(payload)
 
-# TODO: describe how weather should affect virtual temp in main app
 def weather_action_dispatch(payload, app_state):
   # update app state
-  # print('----- weather_action_dispatch, app_state -----')
-  # print(app_state)
   weather_module_data = [m for m in app_state['module_data'] if m['type'] == MODULE_NAME][0]
   weather_module_data['temperature_data'] = payload
 
@@ -108,22 +92,24 @@ def weather_action_dispatch(payload, app_state):
 
 # the formula to determine the effect of the
 # current temperature with the virtual temperature setting
+# can use fine tuning
 def scale_virtual_temp(dt):
   return (dt + (dt ** 2)) / 200
 
 # run module
 print('running module: ' + MODULE_NAME)
+
 # HACK!
-t1 = threading.Timer(INTERVAL/4, add_weather_module)
-t1.daemon = True
-t1.start()
+add_weather_thread = threading.Timer(app_config.WEATHER_INTERVAL/4, add_weather_module)
+add_weather_thread.daemon = True
+add_weather_thread.start()
 
 def update_weather():
-  t = threading.Timer(INTERVAL, update_weather)
-  t.start()
+  update_weather_thread = threading.Timer(app_config.WEATHER_INTERVAL, update_weather)
+  update_weather_thread.start()
   weather_action = create_weather_action(app_config.LOCATION['lat'], app_config.LOCATION['lon'])
   send_action(weather_action)
 
-t = threading.Timer(INTERVAL, update_weather)
-t.daemon = True
-t.start()
+update_weather_thread = threading.Timer(app_config.WEATHER_INTERVAL, update_weather)
+update_weather_thread.daemon = True
+update_weather_thread.start()

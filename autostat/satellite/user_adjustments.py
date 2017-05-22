@@ -1,4 +1,4 @@
-# import create_action from ../app/actions.py
+from autostat.app.actions import create_action
 
 def user_adjust_up(id):
   payload = {

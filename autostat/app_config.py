@@ -1,5 +1,5 @@
-mqtt_hostname = 'iot.eclipse.org'
-mqtt_port = 1883
+MQTT_HOSTNAME = 'iot.eclipse.org'
+MQTT_PORT = 1883
 
 # the threshold for the difference in the set temp
 # and the current temp needed to change the status

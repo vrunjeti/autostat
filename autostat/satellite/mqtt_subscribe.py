@@ -1,11 +1,7 @@
 import paho.mqtt.client as mqtt
-import time
+import autostat.app_config as app_config
 from config import id
 from interfaces import process_action
-
-# TODO: import from app config
-hostname = 'iot.eclipse.org'
-port = 1883
 
 topic = 'autostat/to_satellite'
 
@@ -18,6 +14,8 @@ def on_connect(client, userdata, rc):
 def on_message(client, userdata, message):
   print('Received message on %s: %s (QoS = %s)' % (message.topic, message.payload.decode('utf-8'), str(message.qos)))
   action = eval(message.payload.decode('utf-8'))
+
+  # process action if it applies to the current satellite
   if action['payload']['id'] == id:
     process_action(action)
 
@@ -31,5 +29,5 @@ client.on_connect = on_connect
 client.on_message = on_message
 client.on_disconnect = on_disconnect
 
-client.connect(hostname, port=port)
+client.connect(app_config.MQTT_HOSTNAME, app_config.MQTT_PORT)
 client.loop_forever()

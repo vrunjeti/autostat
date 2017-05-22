@@ -4,11 +4,6 @@ APP_STATE = {
   'status': True,                 # True means turned on, False means turned off
   'satellites': [],
   'module_data': []
-  # 'virtual_weight_multiplier': {
-  #   'user_adjust': 1.0,
-  #   'weather': 1.0,
-  #   'calendar': 1.0
-  # },
 }
 
 # structure for satellite:

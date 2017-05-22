@@ -1,15 +1,7 @@
 from sense_hat import SenseHat
-# from autostat.app.actions import create_action
+from autostat.app.actions import create_action
 
 sense = SenseHat()
-
-# TODO: figure out import
-def create_action(type, payload):
-  action = {
-    'type': type,
-    'payload': payload
-  }
-  return action
 
 def get_temperature():
   temp = sense.get_temperature()

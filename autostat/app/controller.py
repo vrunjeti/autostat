@@ -1,28 +1,12 @@
+import autostat.app_config as app_config
+from actions import create_action
 from state import APP_STATE as state
 from mqtt_publish import message_satellite
 import system_interface
 
-# the threshold for the difference in the set temp
-# and the current temp needed to change the status
-# TODO: line up with config.py
-TOLERANCE = 1
-
-# TODO: import
-def create_action(type, payload):
-  action = {
-    'type': type,
-    'payload': payload
-  }
-  return action
-
-
 def trigger_update():
   update_satellites_status()
   update_system_status()
-
-# update virtual temp of all satellites
-def broadcast_update_satellites():
-  pass
 
 def update_satellites_status():
   for satellite in state['satellites']:
@@ -31,7 +15,7 @@ def update_satellites_status():
     if state['type'] == 'HEAT':
       temp_diff = temp_diff * -1
 
-    if temp_diff > TOLERANCE:
+    if temp_diff > app_config.TOLERANCE:
       if not satellite['status']:
         satellite['status'] = True
         signal_satellite_status(satellite['id'])

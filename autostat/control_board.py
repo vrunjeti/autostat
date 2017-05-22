@@ -1,27 +1,20 @@
 import paho.mqtt.publish as publish
 import paho.mqtt.client as mqtt
+import app_config
+from app.actions import create_action
 
 topic = 'autostat/control_board'
 
-# TODO: import from app config
-hostname = 'iot.eclipse.org'
-port = 1883
-
 mqttc = mqtt.Client()
-mqttc.connect(hostname, port=port)
+mqttc.connect(app_config.MQTT_HOSTNAME, port=app_config.MQTT_PORT)
 mqttc.loop_start()
 
 def send_control_message(message):
   mqttc.publish(topic, str(message), qos=1)
 
-def create_action(type, payload):
-  action = {
-    'type': type,
-    'payload': payload
-  }
-  return action
-
 def set_room_temp(id, temp):
+  """
+  """
   payload = {
     'id': id,
     'temperature': temp
@@ -30,6 +23,8 @@ def set_room_temp(id, temp):
   send_control_message(action)
 
 def set_weather(temp):
+  """
+  """
   payload = {
     'temp': temp,
     'temp_min': temp,
